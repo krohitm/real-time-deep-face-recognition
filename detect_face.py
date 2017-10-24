@@ -226,7 +226,7 @@ class PNet(Network):
              .conv(1, 1, 2, 1, 1, relu=False, name='conv4-1')
              .softmax(3,name='prob1'))
 
-        (self.feed('PReLU3') #pylint: disable=no-value-for-parameter
+        (self.feed('PReLU3') #pylint: disable=no-value-for-parameterif BBGT[j][1:5] != [-1,-1,-1,-1]:
              .conv(1, 1, 4, 1, 1, relu=False, name='conv4-2'))
         
 class RNet(Network):

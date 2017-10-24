@@ -3,22 +3,33 @@ from __future__ import division
 from __future__ import print_function
 
 from scipy import misc
-import sys
+#import sys
 import os
 import argparse
 import tensorflow as tf
 import numpy as np
 import facenet
 import detect_face
-import random
+#import random
 from time import sleep
 
-output_dir_path = '/..Path to output folder../'
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--parent_folder_name", required=True, help="Name of parent folder")
+args = vars(ap.parse_args())
+parent_folder = args['parent_folder_name']
+    
+#output_dir_path = '/..Path to output folder../'
+#output_dir_path = '/data0/krohitm/posture_dataset/scott_vid/realtime_deep_face/training_align'
+output_dir_path = '/data0/krohitm/posture_dataset/scott_vid/facenet_dataset/{0}/training_align'.format(
+        parent_folder)
 output_dir = os.path.expanduser(output_dir_path)
 if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-datadir = '/..Path to human img data folder../'
+#datadir = '/..Path to human img data folder../'
+#datadir='/data0/krohitm/posture_dataset/scott_vid/realtime_deep_face/training'
+datadir='/data0/krohitm/posture_dataset/scott_vid/facenet_dataset/{0}/training'.format(
+        parent_folder)
 dataset = facenet.get_dataset(datadir)
 
 print('Creating networks and loading parameters')
@@ -26,7 +37,8 @@ with tf.Graph().as_default():
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
     sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
     with sess.as_default():
-        pnet, rnet, onet = detect_face.create_mtcnn(sess, './Path to det1.npy,..')
+        pnet, rnet, onet = detect_face.create_mtcnn(sess, '/home/krohitm/code/facenet/src/align')
+        #pnet, rnet, onet = detect_face.create_mtcnn(sess, './Path to det1.npy,..')
 
 minsize = 20  # minimum size of face
 threshold = [0.6, 0.7, 0.7]  # three steps's threshold

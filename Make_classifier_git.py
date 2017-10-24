@@ -12,20 +12,28 @@ import sys
 import math
 import pickle
 from sklearn.svm import SVC
+#from sklearn.neighbors import KNeighborsClassifier as KNN
 
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--parent_folder_name", required=True, help="Name of parent folder")
+args = vars(ap.parse_args())
+parent_folder = args['parent_folder_name']
 
 with tf.Graph().as_default():
 
     with tf.Session() as sess:
 
-        datadir = '/..Path to align face data../'
+        #datadir = '/..Path to align face data../'
+        #datadir = '/data0/krohitm/posture_dataset/scott_vid/realtime_deep_face/training_align'
+        datadir = '/data0/krohitm/posture_dataset/scott_vid/facenet_dataset/{0}/training_align'.format(parent_folder)
         dataset = facenet.get_dataset(datadir)
         paths, labels = facenet.get_image_paths_and_labels(dataset)
         print('Number of classes: %d' % len(dataset))
         print('Number of images: %d' % len(paths))
 
         print('Loading feature extraction model')
-        modeldir = '/..Path to Pre-trained model../20170512-110547/20170512-110547.pb'
+        #modeldir = '/..Path to Pre-trained model../20170512-110547/20170512-110547.pb'
+        modeldir = '/home/krohitm/code/facenet/src/models/20170512-110547/20170512-110547.pb'
         facenet.load_model(modeldir)
 
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
@@ -48,13 +56,17 @@ with tf.Graph().as_default():
             feed_dict = {images_placeholder: images, phase_train_placeholder: False}
             emb_array[start_index:end_index, :] = sess.run(embeddings, feed_dict=feed_dict)
 
-        classifier_filename = '/..Path to save classifier../my_classifier.pkl'
+        #classifier_filename = '/..Path to save classifier../my_classifier.pkl'
+        classifier_filename = '/home/krohitm/code/facenet/src/models/lfw_classifier.pkl'
+        #classifier_filename = '/home/krohitm/code/facenet/src/models/knn_classifier.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
 
         # Train classifier
         print('Training classifier')
         model = SVC(kernel='linear', probability=True)
         model.fit(emb_array, labels)
+        #model = KNN(n_neighbors=3, n_jobs=-1)
+        #model.fit(emb_array, labels)
 
         # Create a list of class names
         class_names = [cls.name.replace('_', ' ') for cls in dataset]
