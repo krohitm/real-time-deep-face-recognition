@@ -15,9 +15,9 @@ from sklearn.svm import SVC
 #from sklearn.neighbors import KNeighborsClassifier as KNN
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--parent_folder_name", required=True, help="Name of parent folder")
+ap.add_argument("-i", "--parent_folder", required=True, help="Name of parent folder")
 args = vars(ap.parse_args())
-parent_folder = args['parent_folder_name']
+parent_folder = args['parent_folder']
 
 with tf.Graph().as_default():
 

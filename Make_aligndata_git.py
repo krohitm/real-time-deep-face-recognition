@@ -15,11 +15,16 @@ from time import sleep
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--parent_folder_name", required=True, help="Name of parent folder")
+ap.add_argument("-i", "output_dir_path", required=False, help="path of training align folder")
+
+
 args = vars(ap.parse_args())
 parent_folder = args['parent_folder_name']
     
 #output_dir_path = '/..Path to output folder../'
 #output_dir_path = '/data0/krohitm/posture_dataset/scott_vid/realtime_deep_face/training_align'
+#output_dir_path = '/data0/krohitm/posture_dataset/scott_vid/facenet_dataset/{0}/training_align'.format(
+#        parent_folder)
 output_dir_path = '/data0/krohitm/posture_dataset/scott_vid/facenet_dataset/{0}/training_align'.format(
         parent_folder)
 output_dir = os.path.expanduser(output_dir_path)
